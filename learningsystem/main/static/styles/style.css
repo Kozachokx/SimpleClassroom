@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+    /* background-color: darkgoldenrod; */
+}
+
+.tab {
+    align-self: center;
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 20px;
+    background-color: darkcyan;
+    margin: 20px 0;
+    padding: 5px 10px;
+    /* width: 100vw; */
+}
+.tab h3{
+    align-self: center;
+}

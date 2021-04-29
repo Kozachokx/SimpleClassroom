@@ -1,0 +1,11 @@
+
+{% block title %} Add Lection {% endblock %}
+<h1>Add New Lection</h1>
+
+<h2>Title <small>| by author: </small></h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{  form.as_p }}
+    <button>Create</button>
+</form>

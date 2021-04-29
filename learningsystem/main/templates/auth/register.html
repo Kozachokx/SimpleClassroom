@@ -1,0 +1,11 @@
+Register
+
+<form method="POST" action="">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" name="Create User" value="Create User">
+</form>
+
+
+<br><h1>Next</h1><br>
+{% include 'main/teacherPage.html' %}

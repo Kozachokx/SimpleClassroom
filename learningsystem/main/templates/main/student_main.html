@@ -1,0 +1,6 @@
+<h1>Teachers</h1>
+<ul>
+{% for teacher in object_list %}
+    <li><h3>{{ teacher.first_name }} {{teacher.last_name}} | ID:{{teacher.id}}  | <a href="{% url 'classroom' teacher.id %}" >PRESS ME</a> </h3> </li>
+{% endfor %}
+</ul>

@@ -1,0 +1,8 @@
+<h1>Lection</h1>
+<ul>
+{% for lection in object_list %}
+    <li><a href="{% url 'details' lection.pk %}">{{ lection.title }}</a> - {{lection.author}}</li>
+{% endfor %}
+</ul>
+
+
