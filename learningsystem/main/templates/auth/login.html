@@ -1,1 +1,19 @@
-<h1>LogIn</h1>
+{% extends 'main/base.html' %}
+{% block content %}
+
+<section class="content-block">
+    <label class='tab gradient-dg-dcyan'><h2 class="bolder">LogIn</h2></label>
+    <div class="box-area">
+        <p>Please, use the following form to log-in:</p>
+        <form method="POST" action="">
+            {{form.as_p}}
+            {% csrf_token %}
+            <input type="submit" name="Login" value="Login">
+        </form>
+        
+    </div>
+</section>
+
+<br><h1>Next</h1><br>
+
+{% endblock %}

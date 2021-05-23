@@ -1,18 +1,148 @@
 body {
     margin: 0;
+    height: 100vh;
     /* background-color: darkgoldenrod; */
+    /* background: linear-gradient(0deg, rgb(255 255 255), rgb(0 220 135), rgb(255 255 255) 80%),
+                linear-gradient(90deg, rgb(255 255 255), rgb(0 220 135), rgb(255 255 255) 80%); */
+}
+
+.imgicon {
+    /* -webkit-filter : hue-rotate(180deg); */
+    /* filter : hue-rotate(180deg); */
+    color: rgb(49, 227, 0);
+
+    border: 0.22em groove green;
+    border-radius: 31%;
+}
+
+.box-area {
+    background: linear-gradient( 90deg, #00814fcc, darkcyan, darkcyan);/*  31 */
+    border-bottom: 4px solid black;
+    border-right: 4px solid black;
+    border-left: 4px solid black;
+    padding: .8em;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    min-width: fit-content;
+}
+
+.box-element{
+    /* margin: 2px 2px; */
+
+    display: flex;
+    /* justify-content: space-between; */
+    /* text-align: center; */
 }
 
 .tab {
+    margin: 0 -2em;
+    padding: 5px 2em;
     align-self: center;
     display: flex; 
     flex-wrap: wrap; 
     gap: 20px;
-    background-color: darkcyan;
-    margin: 20px 0;
-    padding: 5px 10px;
+    /* background-color: darkcyan; */
+    /* margin: 20px 0; */
     /* width: 100vw; */
 }
 .tab h3{
     align-self: center;
+}
+
+
+.list-box{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 20px 2.2em;
+    width: max-content;
+}
+
+.add-btn{
+    border: 3px solid #464646;  
+    height: fit-content; 
+    align-self: center; 
+    background-color: #00f9c3;
+}
+
+.btn-list{
+    color: seagreen;
+    margin: 0.4em 0;
+    text-align: left;
+    width: -webkit-fill-available;
+}
+li .btn-list{
+    color: white;
+    font-weight: 500;
+}
+
+li::marker .btn-list {
+    color: black;
+    /* font-size: 2em; */
+}
+
+
+
+
+.btn-bg-dcyan {
+    background-color: darkcyan;
+    border-color: darkcyan;
+    width: 5.5em;
+    height: 2.45em;
+}
+
+a{
+    color: black;
+    text-decoration: none;
+}
+
+.a-btn-cfg:hover {
+    line-height: 1.3em;
+    color: black;
+    text-decoration: none;
+    font-size: larger;
+    font-weight: 645;
+}
+
+
+
+
+.bolder{
+    font-weight: bolder;
+}
+
+
+/* _________C_O_L_O_R_S_________  _________C_O_L_O_R_S_________  _________C_O_L_O_R_S_________ */
+
+.gradient-dg-dcyan{
+    background: linear-gradient( 90deg, #00814fcc, darkcyan, darkcyan); /*  169 */
+}
+
+.fade-grn {
+    background-color: white;
+    /* background-image: linear-gradient(darkcyan, rgb(0, 190, 190)); */
+
+}
+
+.bg-dark{
+    background-color: #212529;
+    background-color: #0f2825!important;
+}
+
+
+
+
+
+
+/*___________________config_________________ */
+
+.qBoxConfig {
+    display: grid;
+    grid-template: auto / 275px 60px;
+    place-content: space-evenly;
+}
+
+.qBoxConfig>:last-child{
+    width: min-content;
+    justify-self: center;
 }

@@ -1,11 +1,22 @@
-Register
+{% extends 'main/base.html' %}
+{% block content %}
 
-<form method="POST" action="">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" name="Create User" value="Create User">
-</form>
+<section class="content-block">
+    <label class='tab gradient-dg-dcyan'><h2 class="bolder">Register</h2></label>
+    <div class="box-area">
 
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" name="Create User" value="Create User">
+        </form>
+        
+    </div>
+</section>
 
 <br><h1>Next</h1><br>
-{% include 'main/teacherPage.html' %}
+
+{% endblock %}
+{% comment %} {% include 'main/teacherPage.html' %} {% endcomment %}
+
+

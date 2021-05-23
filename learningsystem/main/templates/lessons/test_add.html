@@ -1,0 +1,116 @@
+{% extends 'main/base.html' %}
+{% block title %} Add Test {% endblock %}
+
+
+{% block content %}
+<section class="content-block">
+    <label class='tab gradient-dg-dcyan'><h2 class="bolder">Add New Test</h2></label>
+</section>
+<form class="box-area qBoxConfig">
+
+        <label for="type1">Question type 1 (4-Q 1-A):</label>
+        <input type="number" id="type1" name="type1" min="1" max="100" value="1">
+
+        <label for="type2">Question type 2 (k-Q n-A where n &lt; k):</label>
+        <input type="number" id="type2" name="type1" min="0" max="100"  value="0">
+
+        <label for="type2">Question type 3 (input):</label>
+        <input type="number" id="type3" name="type3" min="0" max="100"  value="0">
+
+    <button type="button" onclick="generateQuizFields()">Generate</button>
+</form>
+
+<section id="qbox">
+    <div id="qType_1">
+        <h2>Type 1 (...)</h2>
+        <ol>
+            <li>
+                <label name="question_1">Question : </label>
+                <input type="text">
+                <p>Answers:</p>
+                <ul>
+                    <li><input type="radio" name="question_1"> <input type="text"></li>
+                    <li><input type="radio" name="question_1"> <input type="text"></li>
+                    <li><input type="radio" name="question_1"> <input type="text"></li>
+                    <li><input type="radio" name="question_1"> <input type="text"></li>
+                </ul>
+            </li>
+            <li>
+                <div for="question_2">Question : <input type="text" name="question_2"></div>
+                <div for="answers_2">Answers : <ul>
+                        <li><input type="radio" name="question_1"> <input type="text"></li>
+                        <li><input type="radio" name="question_1"> <input type="text"></li>
+                        <li><input type="radio" name="question_1"> <input type="text"></li>
+                        <li><input type="radio" name="question_1"> <input type="text"></li>
+                    </ul>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+
+    <div id="qType_2">
+        <h2>Type 2 (...)</h2>
+        <ol>
+            <li>
+                <label name="question_1">Question : </label>
+                <input type="text">
+                <p>Answers: <input type="number" id="" name="" min="1" max="10"  value="4"><button onclick="">reGenerate</button></p>
+                <ul>
+                    <li><input type="checkbox" name="question_1"> <input type="text"></li>
+                    <li><input type="checkbox" name="question_1"> <input type="text"></li>
+                    <li><input type="checkbox" name="question_1"> <input type="text"></li>
+                    <li><input type="checkbox" name="question_1"> <input type="text"></li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div id="qType_3">
+        <h2>Type 3 (...)</h2>
+        <ol>
+            <li>
+                <label name="question_1">Question : </label>
+                <input type="text">
+                <p>Answer: </p>
+                <ul>
+                    <li><input type="text" name="question_1"></li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+</section>
+
+
+    <h2>Type 1</h2>
+    <ol>
+        <li>
+            <p>Question: <input></p>
+            <p>Answers: </p>
+        </li>
+    </ol>
+    <h2>Type 2</h2>
+
+    <h2>Type 3</h2>
+
+{% endblock %}
+
+
+    <form class="box-area flex">
+        <div class="box-element">
+            <label for="type1">Question type (4-Q 1-A):</label>
+            <input type="number" id="type1" name="type1" min="1" max="100" value="1">
+        </div>
+
+        <div class="box-element">
+            <label for="type2">Question type (k-Q n-A where n &lt; k):</label>
+            <input type="number" id="type2" name="type1" min="0" max="100"  value="0">
+        </div>
+
+        <div class="box-element">
+            <label for="type2">Question type (input):</label>
+            <input type="number" id="type3" name="type3" min="0" max="100"  value="0">
+        </div>
+
+        <button onclick="generateQuizFields()">Generate</button>
+    </form>
