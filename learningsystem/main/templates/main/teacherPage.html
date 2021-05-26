@@ -19,8 +19,9 @@
         </label>
         <ul class="list-box">
         {% for item in lections %}
-            <!-- <li><button class="btn btn-success btn-list"><a href="{% url 'lection-details' item.author.id item.pk  %}">{{ item.title }}</a> - {{item.author}}</button></li> -->
-            <li><button class="btn btn-success btn-list" onclick="location.href='{% url 'lection-details' item.author.id item.pk  %}'" ><a href="#">{{ item.title }}</a> - {{item.author}}</button></li>
+            {% if item.is_open or user.id == teacher_id %}
+                <li><button class="btn btn-success btn-list" onclick="location.href='{% url 'lection-details' item.author.id item.pk  %}'" ><a href="#">{{ item.title }}</a> - {{item.author}}</button></li>
+            {% endif %}
         {% endfor %}
         </ul>
     </section>
@@ -28,7 +29,7 @@
 
     <section class="content-block">
         <label class='tab gradient-dg-dcyan'><h3>Practices</h3>
-            {% if user.id == teacher_id %}
+            {% if item.is_open or user.id == teacher_id %}
                 <button style="border: 3px solid #464646;  height: fit-content; align-self: center; background-color: #00f9c3;">
                 <a href="{% url 'practice-add'%}" style="text-decoration: none">Add new</a>
                 </button>
@@ -39,19 +40,18 @@
 
         <ul class="list-box">
         {% for item in practices %}
-            {% if user.id == teacher_id or user.id == item.students %}
-            {% comment %} {% if user.id == teacher_id or student_exists_in(user.id) %} {% endcomment %}
-                <!-- <li><a href="{% url 'practice-details' item.author.id item.pk  %}">{{ item.title }}</a> - {{item.author}}</li> -->
+            {% comment %} <pre>item.is_open: {{item.is_open}}      and ID[ {{user.id}} ] in {{item.student_ids}}  teacher: {{teacher_id}} </pre> {% endcomment %}
+
+            {% if item.is_open and user.id in item.student_ids or user.id == teacher_id %}
                 <li><button class="btn btn-success btn-list" onclick="location.href='{% url 'practice-ex-details' item.author.id item.pk  %}'" ><a href="#">{{ item.title }}</a> - {{item.author}}</button></li>
-                <p>{{item.student_formated_list}}</p>
-            {% else %}
+                {% comment %} <p>{{item.student_formated_list}}</p> {% endcomment %}
+            {% comment %} {% else %}
                 {% for x in item.student_ids %}
                     {% if user.id == x %}
                         <li><button class="btn btn-success btn-list" onclick="location.href='{% url 'practice-ex-details' item.author.id item.pk  %}'" ><a href="#">{{ item.title }}</a> - {{item.author}}</button></li>
                     {% endif %}
-                {% endfor %}
+                {% endfor %} {% endcomment %}
             {% endif %}
-
         {% endfor %}
 
         <ul>
@@ -72,9 +72,6 @@
             <li><button class="btn btn-success btn-list" onclick="location.href='{% url 'practice-details' item.author.id item.pk  %}'" ><a href="#">{{ item.title }}</a> - {{item.author}}</button></li>
         {% endfor %}
         </ul>
-        <ul class="fade-grn">
-            <li>Exmpl</li>
-        </ul>
 
     </section>
 
@@ -82,8 +79,5 @@
         {% endcomment %}
     {{form.lections}}
 
-
-
-    
 
     {% endblock %}

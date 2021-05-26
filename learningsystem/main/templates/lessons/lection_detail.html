@@ -7,31 +7,32 @@
 {% block content %}
 
 <section class="content-block">
-    <label class='tab gradient-dg-dcyan'><h2 class="bolder">{{lection.title}}</h2></label>
+    <label class='tab gradient-dg-dcyan d-flex align-items-center justify-content-between'>
+        <h2 class="bolder">{{lection.title}}</h2> 
+        <div class="text-end">
+            {% if lection.author.id == user.id %}
+                <button class="btn btn-info" onclick="location.href='{% url 'lection-edit' lection.pk %}'"  style="color:black; font-weight:bold; border: 2px solid black;" >Edit</button>
+                <button class="btn btn-danger" onclick="location.href='{% url 'lection-delete' lection.pk %}'"  style="color:black; font-weight:bold; border: 2px solid black;" >Delete</button>
+            {% endif %}
+        </div>
+    </label>
+
     <div class="box-area">
         <h3>Lection details: " {{lection.body}} "</h3>
         {% comment %} <h3>File: '{{lection.document}}'</h3>
         <h3>Filerl: '{{lection.document.url}}'</h3> {% endcomment %}
 
         <h3>File:{% if lection.fileurl != '/media/'%}
-            <a href="{{lection.fileurl}}">PRESS To View</a>
+            <a href="{{lection.fileurl}}" target="_blank">PRESS To View</a>
         {% else %}
             <a>NO file...</a>
         {% endif %}
         </h3>
-
         <image src="{{lection.fileurl}}" width="500">
-
-        {% comment %} <h3>FileDownload: ' <a href={{request.get_host}}{{lection.document.url}} download> ' -was file </a></h3> {% endcomment %}
-        {% comment %} <h3>Filename:  <a href="{{lection.filename}}">{{lection.filename}}</a></h3> {% endcomment %}
-        {% comment %} <img src="{{ lection.document.url }}" /> {% endcomment %}
-
-        {% comment %} <a href="{% url 'lection.document.seq_file.read()' %}">FILE HERE</a> {% endcomment %}
         <br/>
     </div>
         <br/>
-    {% comment %} <a href="{% url 'classroom' lection.author.id %}">Back</a> {% endcomment %}
-    <button class="btn btn-success" onclick="location.href='{% url 'classroom' lection.author.id %}'" style="color:black; font-weight:bold;" >Back</button>
+    <button class="btn btn-success" onclick="location.href='{% url 'classroom' lection.author.id %}'"  style="color:black; font-weight:bold; border: 2px solid black;" >Back</button>
 </section>
 
 {% endblock %}

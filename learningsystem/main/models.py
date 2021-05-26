@@ -1,17 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime, time  
+from datetime import datetime, time
+from django.http import request  
+import pytz
+utc=pytz.UTC
+from django.urls import reverse
+
 
 from django import forms
 from django.db.models.deletion import CASCADE
 # from .models import Post
 
 # Create your models here.
-
-# class CustomUser(User):
-#     class Meta:
-#         abstract = True
-
 
 class Teacher(User):
     class Meta:
@@ -62,6 +62,16 @@ class AssignmentForm(models.Model):
     # filename = os.path.join(settings.MEDIA_ROOT, document)
     open_time = models.DateTimeField(default=datetime.now)
 
+    def is_open(self):
+        # print(f"datetime.now = {datetime.now()} | open_time = {self.open_time}")
+        # print(f"datetime.now = {utc.localize(datetime.now())} | ")
+        # print(f"datetime.now >= open_time  {utc.localize(datetime.now()) >= self.open_time}")
+        return utc.localize(datetime.now()) >= self.open_time
+
+    def get_absolute_url(self):
+        return reverse("classroom", kwargs={"pk": self.pk})
+    
+
     # myfile = os.path.join(settings.MEDIA_ROOT, document)
     @property
     def filename(self):
@@ -79,6 +89,10 @@ class Lection(AssignmentForm):
     
 class Practice(AssignmentForm):
     students = models.ManyToManyField(Student)
+
+    def __str__(self):
+        # return self.title + ' | ' + str(self.author)
+        return self.title  + ' | by ' + str(self.author)
 
     def st_list(self):
         return [].append( Student.objects.get(pk=x.id).id for x in self.students.all() )
@@ -103,6 +117,32 @@ class Practice(AssignmentForm):
     def get_practise_results(self):
         return self.practiceresults.all()
 
+    def passed_student_ids(self):
+        passed_students_id_list = []
+        passed_works = PracticeResult.objects.filter( practice__id = self.pk )
+        for i in passed_works:
+            passed_students_id_list.append(Student.objects.get(pk=i.student.id).id)
+        return passed_students_id_list
+
+    def get_all_practise_results(self):
+        passed_works = PracticeResult.objects.filter( practice__id = self.pk )
+        passed_students = []
+        temp = []
+        for i in passed_works:
+            passed_students.append(Student.objects.get(pk=i.student.id))
+            s = Student.objects.get(pk=i.student.id)
+            # his_work = 
+            t1 = f"[PASSED] {s.first_name} {s.last_name} "
+            temp.append(t1)
+        
+        print(f" models.py Practice ________________________________   {passed_students}")
+        need_to = [Student.objects.get(pk=x.id) for x in self.students.all()]
+        for i in need_to:
+            if( i not in passed_students ):
+                temp.append(f"[didn't] {i.first_name} {i.last_name}")
+
+        
+        return temp
 
 class PracticeResult(models.Model):
     practice = models.ForeignKey(Practice, on_delete=models.CASCADE, null=False)
@@ -110,6 +150,14 @@ class PracticeResult(models.Model):
     document = models.FileField(upload_to='upload/sfiles/', null=True, blank=True, default=None)
     # filename = os.path.join(settings.MEDIA_ROOT, document)
     passed_time = models.DateTimeField(default=datetime.now)
+
+
+    def passed_student_ids(self):
+        return [Student.objects.get(pk=x.id).id for x in self.students.all()]
+
+    def include_file(self):
+        print(f'   - - - - - - --       {self.document.name}  <<<<--------')
+        return self.document
 
     # myfile = os.path.join(settings.MEDIA_ROOT, document)
     @property
@@ -147,6 +195,9 @@ class Test(models.Model):
 
     time = models.PositiveSmallIntegerField(help_text="Time duration for the Quiz in minutes")
     open_time = models.DateTimeField(default=datetime.now)
+
+    def is_open(self):
+        return utc.localize(datetime.now()) >= self.open_time
 
     def get_questions(self):
         return self.questions.all()

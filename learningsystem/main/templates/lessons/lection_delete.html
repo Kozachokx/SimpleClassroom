@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+{% block title %}Delete Lection {% endblock %}
+
+{% block content %}
+<section class="content-block">
+    <label class='tab gradient-dg-dcyan'><h2 class="bolder">Delete Lection</h2></label>
+    <div class="box-area">
+        <form method="POST"  enctype="multipart/form-data">
+            {% csrf_token %}
+            <strong>Are you sure?</strong></br>
+            <button type="submit" class="btn btn-warning" style="font-weight: 900">Delete Lection!</button>
+            <button type="button" onclick="location.href='{% url 'lection-details' user.id lection.id %}'" class="btn btn-danger" style="color:black; font-weight:bold; border: 2px solid black;">Back</button>
+        </form>
+        <br/>
+    </div>
+    </br>
+</section>
+{% endblock %}
+
+

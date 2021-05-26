@@ -1,9 +1,10 @@
+from django.db.models.base import Model
 from django.forms import ModelForm, widgets
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 
-from .models import Practice, Student, Lection, Teacher, Test
+from .models import Practice, PracticeResult, Student, Lection, Teacher, Test
 # from learningsystem.main import models
     
 class CreateUserForm(UserCreationForm):
@@ -65,11 +66,22 @@ class CreateNewPractice(ModelForm):
     #     return 'YES' if obj.document else 'NO'
 
 
+
+class PassNewPractice(forms.ModelForm):
+    class Meta:
+        model = PracticeResult
+        # fields = ('practice', 'student', 'document', 'passed_time')
+        fields = '__all__'
+        exclude = ('student','practice','passed_time')
+
+
+
 class CreateNewTest(ModelForm):
     class Meta:
         model = Test
         fields = '__all__'
         exclude = ('author',)
+        
         
 
 

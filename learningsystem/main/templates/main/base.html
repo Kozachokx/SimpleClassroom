@@ -46,9 +46,24 @@
     </header>
     <main>
     <div style="margin: 0 2em;">
-        {% block content %}
 
+
+
+    {% if user.is_authenticated %}
+        {% block content %}
         {% endblock %}
+    {% elif 'login' in request.path or 'register' in request.path  %}
+        {% block auth %}
+        {% endblock %}
+
+    {% else %}
+        <div class="warning">
+            <p class="warning-text">You are not Allowed Here!</p>
+            <h3>You need to be Logged-In.</h3> 
+            <h3>If you don't have account, please follow to 'Sign-up' button (in top right corner).</h3>
+        </div>
+    {% endif %}
+
     </div>
     </main>
     <!-- Optional JavaScript; choose one of the two! -->

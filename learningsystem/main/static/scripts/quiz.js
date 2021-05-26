@@ -1,3 +1,12 @@
+const list = [];
+let obj = {
+    nam : 'nameZ',
+    sur : 'sukeZ'
+}
+list.push(obj)
+
+
+
 function genereteAnswerFields(type,k = 4){
     let HTMLcode = ''
     let inputTypeField;
@@ -5,8 +14,9 @@ function genereteAnswerFields(type,k = 4){
     if (type == 2) { inputTypeField='checkbox' }
     if (type == 3) { inputTypeField='text' }
 }
-
-
+function genereteQuestionField(id){
+    return `<label name="question_${id}">Question : </label> <input type="text">`
+}
 
 
 function generateQuizFields(){
@@ -26,7 +36,7 @@ function generateQuizFields(){
         HTMLbox += `<div id="qType_${qType}"><h2>Type ${qType} (${arr1[qType-1]})</h2><ol><li>`
 
             for(let qId=1; qId<=arr[qType-1]; qId++){
-
+                HTMLbox += 
             }
             
         HTMLbox += `</li></ol><hr><div>`

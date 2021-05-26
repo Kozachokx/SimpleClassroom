@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% block title %} Add Practice {% endblock %}
+
+{% block content %}
+<section class="content-block">
+    <label class='tab gradient-dg-dcyan'><h2 class="bolder">Edit Practice</h2></label>
+    <div class="box-area">
+        <h2>by {{user.last_name}} {{user.first_name}}</h2>
+        <form method="POST"  enctype="multipart/form-data">
+            {% csrf_token %}
+            {{  form.as_p }}
+            <button type="button" onclick="location.href='{% url 'practice-ex-details' user.id practice.id %}'" class="btn btn-success" style="color:black; font-weight:bold; border: 2px solid black;">Back</button>
+            <button type="submit" class="btn btn-info" style="color:black; font-weight:bold; border: 2px solid black;" >Update</button>
+        </form>
+        <br/>
+    </div>
+    </br>
+</section>
+
+{% endblock %}
+
+

@@ -23,16 +23,26 @@ urlpatterns = [
     url(r'^logout$', LogoutView.as_view(),  name='logout'),
     path('reg', views.registerPage),
     
-
 # Lessons
     path('classroom/<int:pk>/', ViewTeacherClass.as_view(), name="classroom"),
+
 #   Lections
     path('add_lection/', AddNewLection.as_view(), name="lection-add"),
+    path('edit_lection/<int:pk>', UpdateLection.as_view(), name="lection-edit"),
+    path('delete_lection/<int:pk>', DeleteLection.as_view(), name="lection-delete"),
     path('classroom/<int:tpk>/lection/id/<int:pk>', LectionDetailView.as_view(), name="lection-details"),
+
 #   Practises
     path('add_practice/', AddNewPractice.as_view(), name="practice-add"),
     path('classroom/<int:tpk>/practice/id/<int:pk>', PracticeDetailView.as_view(), name="practice-details"),
     path('classroom/<int:tpk>/practice/<int:pk>', PracticeDetailExtendedView.as_view(), name="practice-ex-details"),
+    path('classroom/<int:tpk>/practice_edit/<int:pk>', PracticeUpdate.as_view(), name="practice-edit"),
+    path('classroom/<int:tpk>/practice_delete/<int:pk>', PracticeDelete.as_view(), name="practice-delete"),
+
+    path('classroom/<int:tpk>/practice_pass/<int:pk>/', views.upload_practice, name='practice-pass'),
+    # path('classroom/<int:tpk>/practice_pass/<int:pk>/', PassPractice.as_view(), name="practice-pass"),
+    # path('classroom/<int:tpk>/practice_pass/<int:pk>/', views.pass_practice, name='practice-pass'),
+
 
 #   Tests
     path('add_test/', AddNewTest.as_view(), name="test_add_1"),

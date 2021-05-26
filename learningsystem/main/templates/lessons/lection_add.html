@@ -5,11 +5,12 @@
 <section class="content-block">
     <label class='tab gradient-dg-dcyan'><h2 class="bolder">Add New Lection</h2></label>
     <div class="box-area">
-        <h2>Title <small>| by author: </small></h2>
+        <h2>by {{user.last_name}} {{user.first_name}}</h2>
         <form method="POST"  enctype="multipart/form-data">
             {% csrf_token %}
             {{  form.as_p }}
-            <button type="submit" class="btn btn-success" style="color:black; font-weight:bold; border: 2px solid black;" >Create</button>
+            <button type="button" onclick="location.href='{% url 'classroom' user.id %}'" class="btn btn-success" style="color:black; font-weight:bold; border: 2px solid black;">Back</button>
+            <button type="submit" onclick="location.href='{% url 'classroom' user.id %}'" class="btn btn-success" style="color:black; font-weight:bold; border: 2px solid black;" >Create</button>
         </form>
         <br/>
     </div>

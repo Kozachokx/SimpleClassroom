@@ -9,12 +9,14 @@ from django.contrib.auth import authenticate, login
 
 
 from django.views.generic import CreateView, ListView, DetailView, DeleteView
+from django.views.generic.edit import UpdateView
 
 from .forms import *
 from .models import Lection, Practice, PracticeResult, Student, Teacher, Test
 
 from .forms import LoginStudent, LoginForm
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 
 def registerPage(request):
     form = CreateStudent(request.POST)
@@ -235,7 +237,6 @@ def addTest(request):
 #         print(upload_file.name)
 #         print(upload_file.size)
 #     return render(request, 'upload.html')
-
 # from .models import Lection, Teacher
 
 class TeacherList(ListView):
@@ -256,7 +257,7 @@ class ViewTeacherClass(ListView):
         return render(request, self.template_name, context=context)
 
 
-
+from django.http import HttpResponseRedirect
 
 # Lections---------------------------------------------
 class AddNewLection(CreateView):
@@ -272,11 +273,42 @@ class AddNewLection(CreateView):
             test.author = Teacher.objects.get(pk=request.user.id)
             test.save()
             # pass
+            return HttpResponseRedirect('/classroom/%s/' % test.author.id)
         return render(request, self.template_name, {'form':form})
 
 class LectionView(ListView):
     model = Lection
     template_name = 'lessons/lections.html'
+
+class UpdateLection(UpdateView):
+    model = Lection
+    template_name = 'lessons/lection_update.html'
+    fields = ('title', 'body', 'document', 'open_time')
+
+    def form_valid(self, form):
+        test = form.save(commit=False)
+        test.author = Teacher.objects.get(pk=test.author.id)
+        test.save()
+        # return HttpResponseRedirect('/classroom/%s/' % test.author.id)
+        return HttpResponseRedirect(reverse('lection-details', kwargs={'tpk':int(test.author.id), 'pk':test.id}))
+
+    # def save(self,request):
+    #     form = CreateNewLection(request.POST)
+    #     if form.is_valid():
+    #         test = form.save(commit=False)
+    #         test.author = Teacher.objects.get(pk=request.user.id)
+    #         test.save()
+    #         # pass
+    #     return render(request, self.template_name, {'form':form})
+
+
+class DeleteLection(DeleteView):
+    model = Lection
+    template_name = 'lessons/lection_delete.html'
+    def get_success_url(self):
+            author = self.object.author
+            return reverse_lazy('classroom', kwargs={'pk': author.pk})
+    # success_url = reverse_lazy('main')
 
 class LectionDetailView(DetailView):
     model = Lection
@@ -299,7 +331,7 @@ class AddNewPractice(CreateView):
         if form.is_valid():
             test = form.save(commit=False)
             test.author = Teacher.objects.get(pk=request.user.id)
-            print(f"----------STUDENTS 2 : {form.cleaned_data['students']}   ---------------------")
+            # print(f"----------STUDENTS 2 : {form.cleaned_data['students']}   ---------------------")
             # test.students = form.cleaned_data['students']
             test.save()
             test.students.set(form.cleaned_data['students'])
@@ -314,6 +346,7 @@ class AddNewPractice(CreateView):
             
             # test.save()
             # pass
+            return HttpResponseRedirect('/classroom/%s/' % test.author.id)
         return render(request, self.template_name, {'form':form})
     
 
@@ -330,14 +363,175 @@ class PracticeDetailExtendedView(DetailView):
         practice_id = self.kwargs['pk']
 
         practice = Practice.objects.get( id = practice_id )
-        practice_results = PracticeResult.objects.filter( id = practice_id )
-        
-        print(f"  - - - - - -- - - - - - -- - - --   {practice_results}")
+        practice_results = PracticeResult.objects.filter( practice__id = practice_id )
+        passed_students = []
+        passed_work_ids = PracticeResult.objects.filter( practice__id = practice_id).values_list('student_id', flat=True)
 
-        context = {'practice': practice, 'practice_results':  practice_results, 'teacher_id': teacher_id, 'practice_id': practice_id}
+        # print(f"  - - - - - -- - - - - - -- - - -- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  IDs   {passed_work_ids}")
+
+        for x in passed_work_ids:
+            passed_students.append(Student.objects.get(pk=x))
+
+            
+        all_students = []
+        all_students_ids = Practice.objects.get( id = practice_id ).student_ids()
+        # print(f"--------------=========================  <<<<<<<<<<<< {temp}")
+
+        for x in all_students_ids:
+            all_students.append(Student.objects.get(pk=x))
+        
+        # print(f"  - - - - - -- - - - - - -- - - --NEEeDsss   {all_students_ids}")
+        # print(f"  - - - - - -- - - - - - -- - - --NEEeD   {all_students}")
+        # print(f"  - - - - - -- - - - - - -- - - --PASSd   {passed_students}")
+
+        # teacher_id            - ID викладача який створює/редагує практику можна зіслатись на классрум
+        # practice_id           - ID практики
+        # practice              - Об'єкт практики (поточний)
+        # practice_results      - Об'єкти практик (тільки ті які здавались в поточну практику)
+        # passed_students       - Об'єкти студентів які здали практичне завдання
+        # all_students          - Об'єкти ВСІХ студентів кому призначалась практика
+        # all_students_ids      - ID усіх студентів кому призначалась практика
+
+        context = {'teacher_id': teacher_id, 'practice_id': practice_id, 'practice': practice, 'practice_results':  practice_results, 'passed_students':passed_students, 'all_students':all_students, 'all_students_ids':all_students_ids}
         return render(request, self.template_name, context=context)
 
+
+class PracticeUpdate(UpdateView):
+    model = Practice
+    template_name = 'lessons/practice_edit.html'
+    # fields = '__all__'
+    form_class = CreateNewPractice
+    # fields = ('title', 'body', 'document', 'open_time')
+
+    def save(self,request):
+        form = CreateNewPractice(request.POST)
+        if form.is_valid():
+            test = form.save(commit=False)
+            test.author = Teacher.objects.get(pk=request.user.id)
+            print(f"----------STUDENTS 2 : {form.cleaned_data['students']}   ---------------------")
+            # test.students = form.cleaned_data['students']
+            test.save()
+            test.students.set(form.cleaned_data['students'])
+
+            # student_lst = form.cleaned_data['students']
+            # lsit1 = Student.objects.filter(username__in = student_lst)
+
+            # # test.students.set(students)
+            # for x in student_lst:
+            #     print(f"              {User.objects.get(pk = x.id)}-  -  -  -  -  -  {x}       =    {x.id}   {x.username}")
+            #     test.students.add(x)
+            
+            # test.save()
+            # pass
+        return render(request, self.template_name, {'form':form})
+
+class PracticeDelete(DeleteView):
+    model = Practice
+    template_name = 'lessons/practice_delete.html'
+    def get_success_url(self):
+            author = self.object.author
+            return reverse_lazy('classroom', kwargs={'pk': author.pk})
+    # success_url = reverse_lazy('/classroom/%s/' % self.kwargs['pk']')
+
+
+
+
+class PassPractice(CreateView):
+    model = PracticeResult
+    template_name = 'lessons/practice_pass.html'
+    # fields = '__all__'
+    # form_class = CreateNewPractice
+    fields = ('document',)
+    # form_class = PassNewPractice
+    # fields = ('title', 'body', 'document', 'open_time')
+    print(f"======================================================== >>>>>>  H 1")
+
+
+    def post(self,request, *args, **kwargs):
+        teacher_id = self.kwargs['tpk']
+        practice_id = self.kwargs['pk']
+        form = PassNewPractice(request.POST)
+        print(f"____________________________________ >>>>> teacher: {teacher_id}  | practice: {practice_id}  ")
+
+        if form.is_valid():
+            test = form.save(commit=False)
+
+            test.practice = Practice.objects.get(id=practice_id)
+            test.student = Student.objects.get(pk=request.user.id)
+            print(f"________________________________________  >>>>> teacher: {teacher_id}    |    practice: {practice_id}")
+
+            # test.student = request.user
+            print(f"________________________________________  >>>>> pract: {test.practice.id} |  student: {test.student.id}   FILE : {test.document}")
+            test.save()
+            # pass
+
+            return HttpResponseRedirect(reverse('practice-ex-details', kwargs={'tpk':int(test.practice.author.id), 'pk':practice_id}))
+
+            # return HttpResponseRedirect('/classroom/%s/' % test.practice.author.id)
+        return render(request, self.template_name, {'form':form})
+
+
+from django.urls import reverse
+def pass_practice(request, *args, **kwargs):
+
+    form = PassNewPractice(request.POST, request.FILES)
+    teacher_id = kwargs['tpk']
+    practice_id = kwargs['pk']
+    # print(f"________________________________________  >>>>> teacher: {teacher_id}    |    practice: {practice_id}")
+    form.practice = Practice.objects.get(pk=teacher_id)
+    form.student = Student.objects.get(pk=request.user.id)
+    # print(f"________________________________________  >>>>> teacher: {form.practice}    |    form.student: {form.student}")
+
+    if form.is_valid():
+        print(f'FORM  ISS VALID')
+        # test = form.save(commit=False)
+        # form.save()
+        # pass
+        # return HttpResponseRedirect('/practice-ex-details/%s/practice/%s' % form.practice.author.id, form.practice.id )
+
+        return HttpResponseRedirect(reverse('practice-ex-details', kwargs={'tpk':int(form.practice.author.id), 'pk':form.practice.id}))
+
+        # return HttpResponseRedirect(f"classroom/{form.practice.author.id}/practice/{form.practice.id}")
+
+        # return HttpResponseRedirect('classroom/{1}/practice/{2}'.format(form.practice.author.id, form.practice.id) )
+    return render(request, 'lessons/practice_pass.html', {'form': form})
+
+def upload_practice(request, *args, **kwargs):
+    teacher_id = kwargs['tpk']
+    practice_id = kwargs['pk']
+    if request.method == 'POST':
+        form = PassNewPractice(request.POST, request.FILES)
+        if form.is_valid():
+            instance = PracticeResult(document=request.FILES['document'])
+            instance.practice = Practice.objects.get(pk=practice_id)
+            instance.student = Student.objects.get(pk=request.user.id)
+            instance.save()
+            return HttpResponseRedirect(reverse('practice-ex-details', kwargs={'tpk':int(teacher_id), 'pk':practice_id}))
+    else:
+        form = PassNewPractice()
+    return render(request, 'lessons/practice_pass.html', {'form': form})
+
+
+def pasd(request):
+    form = PassNewPractice(request.POST)
+    if request.method == 'POST':
+        if form.is_valid():
+            cd = form.cleaned_data
+            # PracticeResult.objects.create_user(student=cd['username'], practice=cd['password'], email=cd['email'], first_name=cd['first_name'], last_name=cd['last_name'])
+
+            form.full_clean()
+            return redirect('/login')
+
+    context = {'form':form}
+    return render(request, 'auth/register.html', context)
+
 # -----------------------------------------------------
+
+
+
+
+
+
 
 
 # Tests------------------------------------------------

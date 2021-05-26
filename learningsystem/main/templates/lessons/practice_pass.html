@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+{% block title %} Add Practice {% endblock %}
+
+{% block content %}
+<section class="content-block">
+    <label class='tab gradient-dg-dcyan'><h2 class="bolder">Attach your practice file</h2></label>
+    <div class="box-area">
+        <h2>Title <small>| by author: </small></h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{  form.as_p }}
+            <button type="submit" class="btn btn-success" style="color:black; font-weight:bold; border: 2px solid black;" >Pass</button>
+        </form>
+        <br/>
+    </div>
+    </br>
+    {% comment %} <button class="btn btn-success" onclick="location.href='{% url 'classroom' lection.author.id %}'" style="color:black; font-weight:bold;" >Back</button> {% endcomment %}
+</section>
+
+
+    {% comment %} <h1>Add New Lection</h1>
+
+    <h2>Title <small>| by author: </small></h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{  form.as_p }}
+        <button>Create</button>
+    </form> {% endcomment %}
+{% endblock %}
+
+
