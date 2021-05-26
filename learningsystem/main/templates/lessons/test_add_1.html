@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %}
+{% block title %} Add Test YOUOUOUOUOU {% endblock %}
+
+
+{% block content %}
+<section class="content-block">
+    <label class='tab gradient-dg-dcyan'><h2 class="bolder">Add New Test | ur id = {{ user.id }}{{ user.first_name }} </h2></label>
+</section>
+    <div class="box-area">
+
+    <form method="POST"  enctype="multipart/form-data">
+        {% csrf_token %}
+        {{  form.as_p }}
+            
+        <button type="submit" class="btn btn-success" style="color:black; font-weight:bold; border: 2px solid black;" >Create</button>
+    </form>
+    </div>
+
+    <script>
+        var name = "{{ user.id }}";
+        document.getElementById(''.placeholder) = name;
+    </script>
+
+{% endblock %}

@@ -1,6 +1,19 @@
-<h1>Teachers</h1>
-<ul>
-{% for teacher in object_list %}
-    <li><h3>{{ teacher.first_name }} {{teacher.last_name}} | ID:{{teacher.id}}  | <a href="{% url 'classroom' teacher.id %}" >PRESS ME</a> </h3> </li>
-{% endfor %}
-</ul>
+{% extends 'main/base.html' %}
+
+{%block title %}
+    Classroom[S]
+{% endblock %}
+
+{% block content %}
+
+    <h2 class="bolder">Teachers</h2>
+    <ul>
+    {% for teacher in object_list %}
+        
+        {% comment %} <li><span><h3>{{ teacher.first_name }} {{teacher.last_name}} | ID:{{teacher.id}}  | <button type="button" class="btn btn-success btn-bg-dcyan"><a class="a-btn-cfg" href="{% url 'classroom' teacher.id %}">GET IN</a></button> </h3></span></li> {% endcomment %}
+        <li><h3><button type="button" class="btn btn-success btn-bg-dcyan"  onclick="location.href='{% url 'classroom' teacher.id  %}'"><a class="a-btn-cfg" href="{% url 'classroom' teacher.id %}">GET IN</a></button> | {{ teacher.first_name }} {{teacher.last_name}} | ID:{{teacher.id}}</h3></li>
+
+    {% endfor %}
+    </ul>
+
+{% endblock %}

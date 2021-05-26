@@ -1,15 +1,43 @@
+{% extends 'main/base.html' %} 
+
+{% block title %}
+{{practice.title}}
+{% endblock %}
+
+{% block content %}
+<section class="content-block">
+    <label class='tab gradient-dg-dcyan'><h2 class="bolder">{{practice.title}}</h2></label>
+    <div class="box-area">
+
+        <h3>Practise details: '{{practice.body}}'</h3>
+        <h3>Practice File: <a href="{{practice.fileurl}}" target="_blank">HERE</a></h3>
+        <h3>Students:</h3>
+        <p>{{practice.students}}</p>
+
+        <br/>
+        <p>{{practice.student_formated_list}}</p>
+    </div>
+        <br/>
+    <button onclick="location.href='{% url 'classroom' practice.author.id %}'" class="btn btn-success"  style="color:black; font-weight:bold;" >Back</button>
+</section>
+
+
+{% endblock %}
 
 
 
-<h1>{{practice.title}}</h1></br>
-<h3>Task: '{{practice.body}}'</h3>
-<h3>File: '{{practice.document}}'</h3>
-{% comment %} <h3>FileDownload: ' <a href={{request.get_host}}{{lection.document.url}} download> ' -was file </a></h3> {% endcomment %}
-<h3>File: filename '{{practice.filename}}'</h3>
+    <h1>{{practice.title}}</h1></br>
+    <h3>Task: '{{practice.body}}'</h3>
+    <h3>Practice File: <a href="{{practice.fileurl}}">HERE</a></h3>
 
-{% comment %} <a href="{% url 'lection.document.seq_file.read()' %}">FILE HERE</a> {% endcomment %}
-<h3>Students:</h3>
-<p>{{practice.students}}</p>
-<br/>
-<br/>
-<a href="{% url 'classroom' practice.author.id %}">Back</a>
+    {% comment %} <h3>File: '{{practice.document}}'</h3> {% endcomment %}
+    {% comment %} <h3>FileDownload: ' <a href={{request.get_host}}{{lection.document.url}} download> ' -was file </a></h3> {% endcomment %}
+    {% comment %} <h3>File: filename '{{practice.filename}}'</h3> {% endcomment %}
+    {% comment %} <a href="{% url 'lection.document.seq_file.read()' %}">FILE HERE</a> {% endcomment %}
+
+    <h3>Students:</h3>
+    <p>{{practice.students}}</p>
+    <br/>
+    <br/>
+    {% comment %} <a href="{% url 'classroom' practice.author.id %}">Back</a> {% endcomment %}
+    <button onclick="location.href='{% url 'classroom' practice.author.id %}'" class="btn btn-success"  style="color:black; font-weight:bold;" >Back</button>

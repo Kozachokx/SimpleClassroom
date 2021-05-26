@@ -1,0 +1,104 @@
+{% extends 'main/base.html' %} 
+
+{% block title %}
+{{practice.title}}
+{% endblock %}
+
+{% block content %}
+
+{% if user.id != teacher_id and user.id not in practice.student_ids%}
+    <div class="warning">
+        <p class="warning-text">You are not Allowed Here!</p>
+    </div>
+{% else %}
+
+    <section class="content-block">
+        <label class='tab gradient-dg-dcyan d-flex align-items-center justify-content-between'>
+            <h2 class="bolder">{{practice.title}}</h2> 
+            <div class="text-end">
+                {% if practice.author.id == user.id %}
+                    <button class="btn btn-info" onclick="location.href='{% url 'practice-edit' teacher_id practice.pk %}'"  style="color:black; font-weight:bold; border: 2px solid black;" >Edit</button>
+                    <button class="btn btn-danger" onclick="location.href='{% url 'practice-delete' teacher_id practice.pk %}'"  style="color:black; font-weight:bold; border: 2px solid black;" >Delete</button>
+                {% endif %}
+            </div>
+        </label>
+
+        <div class="box-area">
+            <h3>Practise details: '{{practice.body}}'</h3>
+            {% comment %} <h3>Practice File: <a href="{{practice.fileurl}}" target="_blank">HERE</a></h3> {% endcomment %}
+            <h3>Practice File:{% if practice.fileurl != '/media/'%}
+            <a href="{{practice.fileurl}}" target="_blank">PRESS To View</a>
+            {% else %}
+                <a>NO file...</a>
+            {% endif %}
+            {% if user.id == teacher_id%}
+                <h3>Students:</h3>
+                <p>{{practice.student_formated_list}}</p>
+            {% endif %}
+        </div>
+        <br/>
+        <div>
+            <h3>Results:</h3>
+            <div>
+                {% comment %} {% for i in practice.get_all_practise_results %}
+                    <p>{{i}}<p>
+                {% endfor %}  {% endcomment %}
+            
+            </div>
+
+    {% comment %} 
+                        practice.student_ids - всі кому призначено.
+                        passed_students - всі хто здали. 
+    {% endcomment %}
+
+
+            {% comment %} 
+            __________________ FOR TEACHER to Check _________ 
+            {% endcomment %}
+            
+            {% if user.id == teacher_id %}
+
+                {% for item in practice_results %}
+                    <p class="pased">[Passed] {{item.student.abv}} | {{item.student.id}} | File: 
+                        {% if item.doc_sended %}
+                            <a href="{{item.fileurl}}"><strong>[CLICK VIEW]</strong></a>
+                        {% else %}
+                            <strong>FILE ERROR!</strong>
+                        {% endif %}
+                    |  (time): {{item.passed_time}}</p> 
+                {% endfor %}
+
+                {% for item in all_students %}
+                    {% if item not in passed_students %}
+                        <p class="npased">[didn't] {{item.abv}} - no work yet.</p>
+                    {% endif %}
+                {% endfor %}
+
+            {% else %}
+            {% comment %} 
+            __________________ FOR Students to PASS _________   all_students_ids = practice.student_ids
+            {% endcomment %}
+
+                {% comment %} ids: {{all_students_ids}} {% endcomment %}
+                {% if user.id not in practice.passed_student_ids %}
+                    <p class="npased">You didn't passed the WORK!</p></br> 
+                    {% comment %} <p>Student {{user}} not in {{practice.passed_student_ids}}</p>   {% endcomment %}
+                    <button type="button" class="btn btn-success"  onclick="location.href='{% url 'practice-pass' teacher_id practice.id  %}'" >Pass now!</button>
+                    </br>
+                {% else %}
+                    {% for item in practice_results %}
+                        {% if item.student.id == user.id%}
+                            <p class="pased">Congratulations, you successfully attached your work! | <a href="{{item.fileurl}}"><strong>[CLICK VIEW]</strong></a></p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+            {% endif %}
+            {% comment %} hea : {{practice.passed_student_ids}} {% endcomment %}
+
+        </div>
+        <br/>
+        <button onclick="location.href='{% url 'classroom' practice.author.id %}'" class="btn btn-success"  style="color:black; font-weight:bold;" >Back</button>
+    </section>
+{%endif%}
+{% endblock %}
